@@ -14,6 +14,11 @@
 		180DDFA41AD4C6B100EFAC49 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 180DDFA31AD4C6B100EFAC49 /* Images.xcassets */; };
 		180DDFA71AD4C6B100EFAC49 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180DDFA51AD4C6B100EFAC49 /* LaunchScreen.xib */; };
 		180DDFB31AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFB21AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m */; };
+		180DDFBE1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */; };
+		180DDFC21AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */; };
+		180DDFC71AD5328000EFAC49 /* YQAddJSInterface.js in Resources */ = {isa = PBXBuildFile; fileRef = 180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */; };
+		18C876E11AD617D80080F561 /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 18C876E01AD617D80080F561 /* test.html */; };
+		18DF31A31AD7A4340000872F /* UINavigationItem+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DF31A21AD7A4340000872F /* UINavigationItem+Addition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +45,14 @@
 		180DDFAC1AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjCAddJSInterfaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		180DDFB11AD4C6B100EFAC49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		180DDFB21AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCAddJSInterfaceTests.m; sourceTree = "<group>"; };
+		180DDFBC1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AddJavaScriptInterface.h"; path = "ObjCAddJSInterface/UIWebView+AddJavaScriptInterface.h"; sourceTree = "<group>"; };
+		180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIWebView+AddJavaScriptInterface.m"; path = "ObjCAddJSInterface/UIWebView+AddJavaScriptInterface.m"; sourceTree = "<group>"; };
+		180DDFC01AD4C7D500EFAC49 /* YQWebViewProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YQWebViewProxyDelegate.h; path = ObjCAddJSInterface/YQWebViewProxyDelegate.h; sourceTree = "<group>"; };
+		180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YQWebViewProxyDelegate.m; path = ObjCAddJSInterface/YQWebViewProxyDelegate.m; sourceTree = "<group>"; };
+		180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = YQAddJSInterface.js; path = ObjCAddJSInterface/YQAddJSInterface.js; sourceTree = "<group>"; };
+		18C876E01AD617D80080F561 /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
+		18DF31A11AD7A4340000872F /* UINavigationItem+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+Addition.h"; sourceTree = "<group>"; };
+		18DF31A21AD7A4340000872F /* UINavigationItem+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationItem+Addition.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,14 +94,18 @@
 		180DDF951AD4C6B100EFAC49 /* ObjCAddJSInterface */ = {
 			isa = PBXGroup;
 			children = (
+				18C876E01AD617D80080F561 /* test.html */,
 				180DDF9A1AD4C6B100EFAC49 /* AppDelegate.h */,
 				180DDF9B1AD4C6B100EFAC49 /* AppDelegate.m */,
 				180DDF9D1AD4C6B100EFAC49 /* ViewController.h */,
 				180DDF9E1AD4C6B100EFAC49 /* ViewController.m */,
+				18DF31A11AD7A4340000872F /* UINavigationItem+Addition.h */,
+				18DF31A21AD7A4340000872F /* UINavigationItem+Addition.m */,
 				180DDFA01AD4C6B100EFAC49 /* Main.storyboard */,
 				180DDFA31AD4C6B100EFAC49 /* Images.xcassets */,
 				180DDFA51AD4C6B100EFAC49 /* LaunchScreen.xib */,
 				180DDF961AD4C6B100EFAC49 /* Supporting Files */,
+				180DDFBF1AD4C6EC00EFAC49 /* AddJavaScriptInterface */,
 			);
 			path = ObjCAddJSInterface;
 			sourceTree = "<group>";
@@ -117,6 +134,18 @@
 				180DDFB11AD4C6B100EFAC49 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		180DDFBF1AD4C6EC00EFAC49 /* AddJavaScriptInterface */ = {
+			isa = PBXGroup;
+			children = (
+				180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */,
+				180DDFBC1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.h */,
+				180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */,
+				180DDFC01AD4C7D500EFAC49 /* YQWebViewProxyDelegate.h */,
+				180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */,
+			);
+			name = AddJavaScriptInterface;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +231,8 @@
 				180DDFA21AD4C6B100EFAC49 /* Main.storyboard in Resources */,
 				180DDFA71AD4C6B100EFAC49 /* LaunchScreen.xib in Resources */,
 				180DDFA41AD4C6B100EFAC49 /* Images.xcassets in Resources */,
+				18C876E11AD617D80080F561 /* test.html in Resources */,
+				180DDFC71AD5328000EFAC49 /* YQAddJSInterface.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,9 +250,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				180DDFBE1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m in Sources */,
 				180DDF9F1AD4C6B100EFAC49 /* ViewController.m in Sources */,
+				18DF31A31AD7A4340000872F /* UINavigationItem+Addition.m in Sources */,
 				180DDF9C1AD4C6B100EFAC49 /* AppDelegate.m in Sources */,
 				180DDF991AD4C6B100EFAC49 /* main.m in Sources */,
+				180DDFC21AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +446,7 @@
 				180DDFB81AD4C6B100EFAC49 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		180DDFB91AD4C6B100EFAC49 /* Build configuration list for PBXNativeTarget "ObjCAddJSInterfaceTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +455,7 @@
 				180DDFBB1AD4C6B100EFAC49 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
