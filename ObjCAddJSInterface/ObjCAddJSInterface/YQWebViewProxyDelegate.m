@@ -11,10 +11,12 @@
 
 #define kCustomProtocolScheme @"ika-js-scheme"
 
+//static NSMutableArray *holdOnParam ;
 
 @implementation YQWebViewProxyDelegate
 {
     __weak NSObject<UIWebViewDelegate> *_realDelegate;
+    __strong NSMutableArray *holdOnParams;
 }
 
 - (void)addJavascriptInterfaces:(NSObject *)interface WithName:(NSString *)name
@@ -22,10 +24,10 @@
     [self.registInterFaces setObject:interface forKey:name];
 }
 
-- (NSMutableDictionary *)registInterFaces
+- (NSMapTable *)registInterFaces
 {
     if (!_registInterFaces) {
-        _registInterFaces = [[NSMutableDictionary alloc]init];
+        _registInterFaces = [NSMapTable mapTableWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableWeakMemory];
     }
     return _registInterFaces;
 }
@@ -36,11 +38,13 @@
 }
 
 #pragma mark UIWebViewDelegate
+//注入实体一定要在webview加载完成后才能调用
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     if ([_realDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         [_realDelegate webViewDidFinishLoad:webView];
     }
+    [self injectObjectForWebView:webView];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -54,9 +58,10 @@
 {
     if ([_realDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [_realDelegate webViewDidStartLoad:webView];
-    }
+    };
     [self injectObjectForWebView:webView];
 }
+
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -83,26 +88,25 @@
         invoker.target = interface;
         
         //An NSInvocation by default does not retain or copy given arguments for efficiency, so each object passed as argument must still live when the invocation is invoked.
-        NSMutableArray *holdOnParam = [[NSMutableArray alloc]init];
+        if (!holdOnParams) {
+            holdOnParams = [[NSMutableArray alloc]init];
+        }
         
         BOOL callAsync = NO;
         NSString *callBackID = nil;
-        
         if ([components count] > 3){
             
             NSString *argsAsString = [(NSString*)[components objectAtIndex:3]
                                       stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSArray* formattedArgs = [argsAsString componentsSeparatedByString:@":"];
-            
+            NSArray* formattedArgs = [argsAsString componentsSeparatedByString:@"/@@/"];
             for (NSInteger i = 0, j = 0, l = [formattedArgs count]; i < l; i+=2, j++){
-                
                 NSString* type = ((NSString*) [formattedArgs objectAtIndex:i]);
                 NSString* argStr = ((NSString*) [formattedArgs objectAtIndex:i + 1]);
                 
                 if ([@"s" isEqualToString:type]){
-                    NSString* arg = [argStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    [holdOnParam addObject:arg];
-                    [invoker setArgument:&arg atIndex:(j + 2)];
+                    [holdOnParams addObject:argStr];
+                    
+                    [invoker setArgument:&argStr atIndex:(j + 2)];
                 }
                 else if([@"d" isEqualToString:type])
                 {
@@ -116,24 +120,14 @@
                     BOOL arg = [boolStr boolValue];
                     [invoker setArgument:&arg atIndex:(j+2)];
                 }
-                else if ([@"o" isEqualToString:type])
-                {
-                    NSString* objStr = [argStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    NSData *data = [objStr dataUsingEncoding:NSUTF8StringEncoding];
-                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
-                                                                        options:0
-                                                                          error:nil];
-                    [holdOnParam addObject:dic];
-                    [invoker setArgument:&dic atIndex:(j+2)];
-                }
                 else if ([@"a" isEqualToString:type])
                 {
                     NSString *arrStr = [argStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                     NSData *data = [arrStr dataUsingEncoding:NSUTF8StringEncoding];
-                    NSArray *array = [NSJSONSerialization JSONObjectWithData:data
-                                                                     options:0
-                                                                       error:nil];
-                    [holdOnParam addObject:array];
+                    NSArray *array = [[NSJSONSerialization JSONObjectWithData:data
+                                                                      options:0
+                                                                        error:nil]copy];
+                    [holdOnParams addObject:array];
                     [invoker setArgument:&array atIndex:(j+2)];
                 }
                 else if ([@"f" isEqualToString:type])
@@ -141,39 +135,59 @@
                     callAsync = YES;
                     callBackID = [argStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 }
+                else if ([@"o" isEqualToString:type])
+                {
+                    //ONLY for inject ajax
+                    NSString* objStr = [argStr stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    NSData *data = [objStr dataUsingEncoding:NSUTF8StringEncoding];
+                    NSMutableArray *arr = [[NSJSONSerialization JSONObjectWithData:data
+                                                                           options:0
+                                                                             error:nil]mutableCopy];
+                    //                    NSDictionary *dic = [arr objectAtIndex:1];
+                    //arr[0]: 在js中对应的obj的key, arr[1]:参数, arr[2]:webview
+                    [arr addObject:webView];
+                    [holdOnParams addObject:arr];
+                    [invoker setArgument:&arr atIndex:(j+2)];
+                    callAsync = YES;
+                }
             }
+            printf("\n");
         }
-        
         if (callAsync) {
+            
             __weak typeof(self) wSelf = self;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
+                //                [invoker retainArguments];
                 [invoker invoke];
                 //return the value by using javascript, only support string, now!!!
-                if ([sig methodReturnLength] > 0){
-                    NSString* retValue;
-                    [invoker getReturnValue:&retValue];
+                if (callBackID && [sig methodReturnLength] > 0){
+                    NSString* retValue = nil;
+                    void *resultVal;
+                    [invoker getReturnValue:&resultVal];
+                    retValue = (__bridge NSString*)resultVal;
+                    
                     [wSelf returnResultFrom:webView callBkId:callBackID args:retValue];
                 }
-                [holdOnParam removeAllObjects];
             });
         }
         else
         {
+            [invoker retainArguments];
             [invoker invoke];
             if ([sig methodReturnLength] > 0){
-                NSString* retValue;
-                [invoker getReturnValue:&retValue];
+                NSString* retValue = nil;
+                
+                void *resultVal;
+                [invoker getReturnValue:&resultVal];
+                retValue = (__bridge NSString*)resultVal;
                 
                 if (retValue == NULL || retValue == nil){
-                    [webView stringByEvaluatingJavaScriptFromString:@"IKAJS.retValue=null;"];
+                    [webView stringByEvaluatingJavaScriptFromString:@"window.IKAJS.retValue=null;"];
                 }else{
                     retValue = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) retValue, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
-                    [webView stringByEvaluatingJavaScriptFromString:[@"" stringByAppendingFormat:@"IKAJS.retValue=\"%@\";", retValue]];
+                    [webView stringByEvaluatingJavaScriptFromString:[@"" stringByAppendingFormat:@"window.IKAJS.retValue=\"%@\";", retValue]];
                 }
             }
-            [holdOnParam removeAllObjects];
-
         }
         return NO;
     }
@@ -196,7 +210,7 @@
     
     __block NSMutableString* injection = [[NSMutableString alloc] init];
     
-    [self.registInterFaces enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
+    [[self.registInterFaces dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
         
         /*
          IKAJS.inject("objname", ["mehod1", "method2"]);
@@ -208,17 +222,27 @@
         
         //object methods
         unsigned int count = 0;
+        unsigned int superCount = 0;
         Class thisCls = object_getClass(obj);
+        Class thisSuperCls = class_getSuperclass(thisCls);
         
         Method *mtdList = class_copyMethodList(thisCls, &count);
+        Method *superMthList = class_copyMethodList(thisSuperCls, &superCount);
         
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < (count+superCount); i++) {
             
             [injection appendString:@"\""];
-            [injection appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mtdList[i]))]];
+            
+            if (i < count) {
+                [injection appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mtdList[i]))]];
+            }
+            else
+            {
+                [injection appendString:[NSString stringWithUTF8String:sel_getName(method_getName(superMthList[i-count]))]];
+            }
             [injection appendString:@"\""];
             
-            if (i != count - 1){
+            if (i != (count+superCount) - 1){
                 [injection appendString:@", "];
             }
         }
@@ -226,6 +250,7 @@
         [injection appendString:@"]);"];
         
         free(mtdList);
+        free(superMthList);
     }];
     
     [webView stringByEvaluatingJavaScriptFromString:injection];
@@ -233,8 +258,8 @@
 
 - (void)returnResultFrom:(UIWebView*)web callBkId:(NSString*)callbackId args:(NSString*)arg;
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [web stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"IKAJS.invokeCallBack(%@,%@)",callbackId,arg]];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [web stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"window.IKAJS.invokeCallBack(%@,'%@');",callbackId,arg]];
     });
 }
 

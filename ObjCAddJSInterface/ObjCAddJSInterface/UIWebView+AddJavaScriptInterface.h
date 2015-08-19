@@ -17,7 +17,7 @@
 /**
  *  USE THIS METHOD REPLATE ORIGINAL setDelegate
  *
- *  @param delegate 
+ *  @param delegate
  */
 - (void)setCustomDelegate:(NSObject<UIWebViewDelegate>*)delegate;
 
