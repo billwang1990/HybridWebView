@@ -9,9 +9,7 @@
 #import "YQWebViewProxyDelegate.h"
 #import <objc/runtime.h>
 
-#define kCustomProtocolScheme @"ika-js-scheme"
-
-//static NSMutableArray *holdOnParam ;
+#define kCustomProtocolScheme @"hybrid-js-scheme"
 
 @implementation YQWebViewProxyDelegate
 {
@@ -21,15 +19,15 @@
 
 - (void)addJavascriptInterfaces:(NSObject *)interface WithName:(NSString *)name
 {
-    [self.registInterFaces setObject:interface forKey:name];
+    [self.registInterface setObject:interface forKey:name];
 }
 
-- (NSMapTable *)registInterFaces
+- (NSMapTable *)registInterface
 {
-    if (!_registInterFaces) {
-        _registInterFaces = [NSMapTable mapTableWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableWeakMemory];
+    if (!_registInterface) {
+        _registInterface = [NSMapTable mapTableWithKeyOptions:NSMapTableStrongMemory valueOptions:NSMapTableWeakMemory];
     }
-    return _registInterFaces;
+    return _registInterface;
 }
 
 - (void)setDelegate:(id<UIWebViewDelegate>)delegate
@@ -59,14 +57,12 @@
     if ([_realDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [_realDelegate webViewDidStartLoad:webView];
     };
-    [self injectObjectForWebView:webView];
 }
-
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     [self injectObjectForWebView:webView];
-    
+
     NSURL *url = [request URL];
     
     if ([[url scheme] hasPrefix:kCustomProtocolScheme]) {
@@ -78,7 +74,7 @@
         NSString* method = [(NSString*)[components objectAtIndex:2]
                             stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
-        NSObject* interface = [self.registInterFaces objectForKey:obj];
+        NSObject* interface = [self.registInterface objectForKey:obj];
         
         SEL selector = NSSelectorFromString(method);
         NSMethodSignature* sig = [[interface class] instanceMethodSignatureForSelector:selector];
@@ -156,6 +152,7 @@
         if (callAsync) {
             
             __weak typeof(self) wSelf = self;
+            
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 //                [invoker retainArguments];
                 [invoker invoke];
@@ -182,10 +179,10 @@
                 retValue = (__bridge NSString*)resultVal;
                 
                 if (retValue == NULL || retValue == nil){
-                    [webView stringByEvaluatingJavaScriptFromString:@"window.IKAJS.retValue=null;"];
+                    [webView stringByEvaluatingJavaScriptFromString:@"window.HybridWeb.retValue=null;"];
                 }else{
                     retValue = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,(CFStringRef) retValue, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8));
-                    [webView stringByEvaluatingJavaScriptFromString:[@"" stringByAppendingFormat:@"window.IKAJS.retValue=\"%@\";", retValue]];
+                    [webView stringByEvaluatingJavaScriptFromString:[@"" stringByAppendingFormat:@"window.HybridWeb.retValue=\"%@\";", retValue]];
                 }
             }
         }
@@ -201,7 +198,7 @@
 
 - (void)injectObjectForWebView:(UIWebView*)webView
 {
-    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof IKAJS == 'object'"] isEqualToString:@"true"]) {
+    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof HybridWeb == 'object'"] isEqualToString:@"true"]) {
         NSBundle *bundle = [NSBundle mainBundle];
         NSString *filePath = [bundle pathForResource:@"YQAddJSInterface" ofType:@"js"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
@@ -210,57 +207,66 @@
     
     __block NSMutableString* injection = [[NSMutableString alloc] init];
     
-    [[self.registInterFaces dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
+    [[self.registInterface dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
         
         /*
-         IKAJS.inject("objname", ["mehod1", "method2"]);
+         HybridWeb.inject("objname", ["mehod1", "method2"]);
          */
         //object name
-        [injection appendString:@"IKAJS.inject(\""];
+        [injection appendString:@"HybridWeb.inject(\""];
         [injection appendString:objectKey];
         [injection appendString:@"\", ["];
         
-        //object methods
-        unsigned int count = 0;
-        unsigned int superCount = 0;
-        Class thisCls = object_getClass(obj);
-        Class thisSuperCls = class_getSuperclass(thisCls);
-        
-        Method *mtdList = class_copyMethodList(thisCls, &count);
-        Method *superMthList = class_copyMethodList(thisSuperCls, &superCount);
-        
-        for (int i = 0; i < (count+superCount); i++) {
-            
+        //get object methods
+        NSArray *methods = DumpObjMethods(object_getClass(obj));
+        for (NSString *method in methods) {
+            [injection appendString:@"\""];
+            [injection appendString:method];
             [injection appendString:@"\""];
             
-            if (i < count) {
-                [injection appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mtdList[i]))]];
-            }
-            else
-            {
-                [injection appendString:[NSString stringWithUTF8String:sel_getName(method_getName(superMthList[i-count]))]];
-            }
-            [injection appendString:@"\""];
-            
-            if (i != (count+superCount) - 1){
+            if ([method isEqual:methods.lastObject]) {
+                [injection appendString:@"]);"];
+            }else{
                 [injection appendString:@", "];
             }
         }
-        
-        [injection appendString:@"]);"];
-        
-        free(mtdList);
-        free(superMthList);
     }];
     
     [webView stringByEvaluatingJavaScriptFromString:injection];
 }
 
-- (void)returnResultFrom:(UIWebView*)web callBkId:(NSString*)callbackId args:(NSString*)arg;
+- (void)returnResultFrom:(UIWebView*)web callBkId:(NSString*)callbackId args:(NSString*)arg
 {
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [web stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"window.IKAJS.invokeCallBack(%@,'%@');",callbackId,arg]];
+        [web stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"window.HybridWeb.invokeCallBack(%@,'%@');",callbackId,arg]];
     });
+}
+
+#pragma mark Dump Class
+NSArray* DumpObjMethods(Class clz){
+    
+    Class thisClass = clz;
+    NSMutableArray *ret = [[NSMutableArray alloc]init];
+    do {
+        unsigned int methodCount = 0;
+        Method *methods = class_copyMethodList(clz, &methodCount);
+        
+        for (unsigned int i = 0; i < methodCount; i++) {
+            
+            Method method = methods[i];
+            [ret addObject:@(sel_getName(method_getName(method)))];
+            
+            printf("\t'%s' has method named '%s' of encoding '%s'\n",
+                   class_getName(clz),
+                   sel_getName(method_getName(method)),
+                   method_getTypeEncoding(method));
+        }
+        
+        free(methods);
+        thisClass = class_getSuperclass(thisClass);
+        
+    } while (thisClass);
+    return ret;
 }
 
 @end

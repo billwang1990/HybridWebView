@@ -10,12 +10,40 @@
 #import "YQWebViewProxyDelegate.h"
 #import <objc/runtime.h>
 
-static void *kYQWebViewProxyDelegateKey = &kYQWebViewProxyDelegateKey;
-
-
 @implementation UIWebView (AddJavaScriptInterface)
 
-- (void)addJavascriptInterfaces:(NSObject *)interface WithName:(NSString *)name
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        SEL setDel = @selector(setDelegate:);
+        SEL swizzlingSetDel = @selector(YQHybridSetDelegate:);
+        
+        Method existingMtd = class_getInstanceMethod(self, setDel);
+        Method newMtd = class_getInstanceMethod(self, swizzlingSetDel);
+        
+        BOOL add = class_addMethod([self class], setDel, method_getImplementation(newMtd), method_getTypeEncoding(newMtd));
+        
+        if (add) {
+            class_replaceMethod([self class], swizzlingSetDel, method_getImplementation(existingMtd), method_getTypeEncoding(newMtd));
+        }else{
+            method_exchangeImplementations(existingMtd, newMtd);
+        }
+    });
+}
+
+- (void)YQHybridSetDelegate:(id<UIWebViewDelegate>)del{
+    
+    NSCAssert([del conformsToProtocol:@protocol(UIWebViewDelegate)], @"must conform UIWebViewDelegate");
+
+    YQWebViewProxyDelegate *proxyDelegate = [self webViewProxyDelegate];
+    [proxyDelegate setDelegate:del];
+    
+    [self YQHybridSetDelegate:del];
+}
+
+- (void)addJavascriptInterfaces:(id)interface WithName:(NSString *)name
 {
     [[self webViewProxyDelegate] addJavascriptInterfaces:interface WithName:name];
 }
@@ -24,25 +52,14 @@ static void *kYQWebViewProxyDelegateKey = &kYQWebViewProxyDelegateKey;
 {
     YQWebViewProxyDelegate *retDelegate = nil;
     
-    retDelegate = objc_getAssociatedObject(self, kYQWebViewProxyDelegateKey);
+    retDelegate = objc_getAssociatedObject(self, @selector(webViewProxyDelegate));
     
     if (!retDelegate) {
         retDelegate = [[YQWebViewProxyDelegate alloc]init];
-        objc_setAssociatedObject(self, kYQWebViewProxyDelegateKey, retDelegate, OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(self, @selector(webViewProxyDelegate), retDelegate, OBJC_ASSOCIATION_RETAIN);
     }
     
     return retDelegate;
 }
-
-- (void)setCustomDelegate:(NSObject<UIWebViewDelegate> *)delegate
-{
-    NSCAssert([delegate conformsToProtocol:@protocol(UIWebViewDelegate)], @"must conform UIWebViewDelegate");
-    
-    YQWebViewProxyDelegate *proxyDelegate = [self webViewProxyDelegate];
-    [proxyDelegate setDelegate:delegate];
-    
-    self.delegate = proxyDelegate;
-}
-
 
 @end

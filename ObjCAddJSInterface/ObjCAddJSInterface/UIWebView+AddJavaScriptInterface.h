@@ -14,11 +14,4 @@
 
 - (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
 
-/**
- *  USE THIS METHOD REPLATE ORIGINAL setDelegate
- *
- *  @param delegate
- */
-- (void)setCustomDelegate:(NSObject<UIWebViewDelegate>*)delegate;
-
 @end

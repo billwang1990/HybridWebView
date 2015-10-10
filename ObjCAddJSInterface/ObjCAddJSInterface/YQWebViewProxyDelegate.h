@@ -11,7 +11,7 @@
 
 @interface YQWebViewProxyDelegate : NSObject<UIWebViewDelegate>
 
-@property (nonatomic, strong) NSMapTable *registInterFaces;
+@property (nonatomic, strong) NSMapTable *registInterface;
 
 - (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
 - (void) setDelegate:(id<UIWebViewDelegate>)delegate;
