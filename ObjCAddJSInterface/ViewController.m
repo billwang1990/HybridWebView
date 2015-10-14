@@ -10,10 +10,10 @@
 #import "UIWebView+AddJavaScriptInterface.h"
 #import "UINavigationItem+Addition.h"
 
-
 @interface ViewController ()<UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+
 @end
 
 @implementation ViewController
@@ -22,16 +22,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    [self.webView addJavascriptInterfaces:self WithName:@"ViewController"];
-    [self.webView setCustomDelegate:self];
+    typeof(self) wSelf = self;
+    [self.webView addJavascriptInterfaces:wSelf WithName:@"ViewController"];
     
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] 																		 pathForResource:@"test" ofType:@"html"]isDirectory:NO]]];
     
-    
     [self.navigationItem setNavigationBarItemWithTitle:@"add" andTarget:self action:@selector(tap) isLeftItem:NO];
     
-//    NSURL *url = [NSURL URLWithString:@"http://blog.devtang.com/blog/2015/04/09/ios-weekly-42/"];
-//    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,7 +38,6 @@
 
 - (void)tap
 {
-
     [self.navigationController pushViewController:[ViewController new] animated:YES];
 }
 

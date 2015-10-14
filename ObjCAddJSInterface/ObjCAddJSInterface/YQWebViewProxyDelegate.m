@@ -193,6 +193,7 @@
         return YES;
     }
     
+    
     return [_realDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
 }
 
@@ -203,36 +204,36 @@
         NSString *filePath = [bundle pathForResource:@"YQAddJSInterface" ofType:@"js"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
-    }
-    
-    __block NSMutableString* injection = [[NSMutableString alloc] init];
-    
-    [[self.registInterface dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
         
-        /*
-         HybridWeb.inject("objname", ["mehod1", "method2"]);
-         */
-        //object name
-        [injection appendString:@"HybridWeb.inject(\""];
-        [injection appendString:objectKey];
-        [injection appendString:@"\", ["];
+        __block NSMutableString* injection = [[NSMutableString alloc] init];
         
-        //get object methods
-        NSArray *methods = DumpObjMethods(object_getClass(obj));
-        for (NSString *method in methods) {
-            [injection appendString:@"\""];
-            [injection appendString:method];
-            [injection appendString:@"\""];
+        [[self.registInterface dictionaryRepresentation] enumerateKeysAndObjectsUsingBlock:^(id objectKey, NSObject *obj, BOOL *stop) {
             
-            if ([method isEqual:methods.lastObject]) {
-                [injection appendString:@"]);"];
-            }else{
-                [injection appendString:@", "];
+            /*
+                 HybridWeb.inject("objname", ["mehod1", "method2"]);
+             */
+            //object name
+            [injection appendString:@"HybridWeb.inject(\""];
+            [injection appendString:objectKey];
+            [injection appendString:@"\", ["];
+            
+            //get object methods
+            NSArray *methods = DumpObjMethods(object_getClass(obj));
+            for (NSString *method in methods) {
+                [injection appendString:@"\""];
+                [injection appendString:method];
+                [injection appendString:@"\""];
+                
+                if ([method isEqual:methods.lastObject]) {
+                    [injection appendString:@"]);"];
+                }else{
+                    [injection appendString:@", "];
+                }
             }
-        }
-    }];
-    
-    [webView stringByEvaluatingJavaScriptFromString:injection];
+        }];
+        
+        [webView stringByEvaluatingJavaScriptFromString:injection];
+    }
 }
 
 - (void)returnResultFrom:(UIWebView*)web callBkId:(NSString*)callbackId args:(NSString*)arg

@@ -38,7 +38,9 @@
     NSCAssert([del conformsToProtocol:@protocol(UIWebViewDelegate)], @"must conform UIWebViewDelegate");
 
     YQWebViewProxyDelegate *proxyDelegate = [self webViewProxyDelegate];
-    [proxyDelegate setDelegate:del];
+    if (![del isEqual:proxyDelegate]) {
+        [proxyDelegate setDelegate:del];
+    }
     
     [self YQHybridSetDelegate:del];
 }
@@ -57,9 +59,11 @@
     if (!retDelegate) {
         retDelegate = [[YQWebViewProxyDelegate alloc]init];
         objc_setAssociatedObject(self, @selector(webViewProxyDelegate), retDelegate, OBJC_ASSOCIATION_RETAIN);
+        self.delegate = retDelegate;
     }
     
     return retDelegate;
 }
+
 
 @end
