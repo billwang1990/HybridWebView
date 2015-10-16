@@ -15,10 +15,12 @@
 		180DDFA71AD4C6B100EFAC49 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180DDFA51AD4C6B100EFAC49 /* LaunchScreen.xib */; };
 		180DDFB31AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFB21AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m */; };
 		180DDFBE1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */; };
-		180DDFC21AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */; };
+		180DDFC21AD4C7D500EFAC49 /* YQWebViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFC11AD4C7D500EFAC49 /* YQWebViewProxy.m */; };
 		180DDFC71AD5328000EFAC49 /* YQAddJSInterface.js in Resources */ = {isa = PBXBuildFile; fileRef = 180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */; };
 		18C876E11AD617D80080F561 /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = 18C876E01AD617D80080F561 /* test.html */; };
 		18DF31A31AD7A4340000872F /* UINavigationItem+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DF31A21AD7A4340000872F /* UINavigationItem+Addition.m */; };
+		C884A3D51BCF45E300F701BD /* YQWebViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFC11AD4C7D500EFAC49 /* YQWebViewProxy.m */; };
+		C884A3D61BCF45E600F701BD /* UIWebView+AddJavaScriptInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,8 +49,8 @@
 		180DDFB21AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCAddJSInterfaceTests.m; sourceTree = "<group>"; };
 		180DDFBC1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AddJavaScriptInterface.h"; path = "ObjCAddJSInterface/UIWebView+AddJavaScriptInterface.h"; sourceTree = "<group>"; };
 		180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIWebView+AddJavaScriptInterface.m"; path = "ObjCAddJSInterface/UIWebView+AddJavaScriptInterface.m"; sourceTree = "<group>"; };
-		180DDFC01AD4C7D500EFAC49 /* YQWebViewProxyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YQWebViewProxyDelegate.h; path = ObjCAddJSInterface/YQWebViewProxyDelegate.h; sourceTree = "<group>"; };
-		180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YQWebViewProxyDelegate.m; path = ObjCAddJSInterface/YQWebViewProxyDelegate.m; sourceTree = "<group>"; };
+		180DDFC01AD4C7D500EFAC49 /* YQWebViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YQWebViewProxy.h; path = ObjCAddJSInterface/YQWebViewProxy.h; sourceTree = "<group>"; };
+		180DDFC11AD4C7D500EFAC49 /* YQWebViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YQWebViewProxy.m; path = ObjCAddJSInterface/YQWebViewProxy.m; sourceTree = "<group>"; };
 		180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = YQAddJSInterface.js; path = ObjCAddJSInterface/YQAddJSInterface.js; sourceTree = "<group>"; };
 		18C876E01AD617D80080F561 /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
 		18DF31A11AD7A4340000872F /* UINavigationItem+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+Addition.h"; sourceTree = "<group>"; };
@@ -142,8 +144,8 @@
 				180DDFC61AD5328000EFAC49 /* YQAddJSInterface.js */,
 				180DDFBC1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.h */,
 				180DDFBD1AD4C6E100EFAC49 /* UIWebView+AddJavaScriptInterface.m */,
-				180DDFC01AD4C7D500EFAC49 /* YQWebViewProxyDelegate.h */,
-				180DDFC11AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m */,
+				180DDFC01AD4C7D500EFAC49 /* YQWebViewProxy.h */,
+				180DDFC11AD4C7D500EFAC49 /* YQWebViewProxy.m */,
 			);
 			name = AddJavaScriptInterface;
 			sourceTree = "<group>";
@@ -192,7 +194,7 @@
 		180DDF8B1AD4C6B100EFAC49 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = billwang1990.github.io;
 				TargetAttributes = {
 					180DDF921AD4C6B100EFAC49 = {
@@ -255,7 +257,7 @@
 				18DF31A31AD7A4340000872F /* UINavigationItem+Addition.m in Sources */,
 				180DDF9C1AD4C6B100EFAC49 /* AppDelegate.m in Sources */,
 				180DDF991AD4C6B100EFAC49 /* main.m in Sources */,
-				180DDFC21AD4C7D500EFAC49 /* YQWebViewProxyDelegate.m in Sources */,
+				180DDFC21AD4C7D500EFAC49 /* YQWebViewProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +266,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				180DDFB31AD4C6B100EFAC49 /* ObjCAddJSInterfaceTests.m in Sources */,
+				C884A3D51BCF45E300F701BD /* YQWebViewProxy.m in Sources */,
+				C884A3D61BCF45E600F701BD /* UIWebView+AddJavaScriptInterface.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +321,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -379,6 +384,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ObjCAddJSInterface/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "billwang.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -389,6 +395,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ObjCAddJSInterface/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "billwang.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -407,6 +414,7 @@
 				);
 				INFOPLIST_FILE = ObjCAddJSInterfaceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "billwang.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjCAddJSInterface.app/ObjCAddJSInterface";
 			};
@@ -422,6 +430,7 @@
 				);
 				INFOPLIST_FILE = ObjCAddJSInterfaceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "billwang.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjCAddJSInterface.app/ObjCAddJSInterface";
 			};

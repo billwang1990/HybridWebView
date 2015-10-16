@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class YQWebViewProxyDelegate;
-
 @interface UIWebView (AddJavaScriptInterface)
 
 - (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;

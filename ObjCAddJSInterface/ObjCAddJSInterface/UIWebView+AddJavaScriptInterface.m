@@ -7,7 +7,7 @@
 //
 
 #import "UIWebView+AddJavaScriptInterface.h"
-#import "YQWebViewProxyDelegate.h"
+#import "YQWebViewProxy.h"
 #import <objc/runtime.h>
 
 @implementation UIWebView (AddJavaScriptInterface)
@@ -37,7 +37,7 @@
     
     NSCAssert([del conformsToProtocol:@protocol(UIWebViewDelegate)], @"must conform UIWebViewDelegate");
 
-    YQWebViewProxyDelegate *proxyDelegate = [self webViewProxyDelegate];
+    YQWebViewProxy *proxyDelegate = [self webViewProxyDelegate];
     if (![del isEqual:proxyDelegate]) {
         [proxyDelegate setDelegate:del];
     }
@@ -50,14 +50,14 @@
     [[self webViewProxyDelegate] addJavascriptInterfaces:interface WithName:name];
 }
 
-- (YQWebViewProxyDelegate*)webViewProxyDelegate
+- (YQWebViewProxy*)webViewProxyDelegate
 {
-    YQWebViewProxyDelegate *retDelegate = nil;
+    YQWebViewProxy *retDelegate = nil;
     
     retDelegate = objc_getAssociatedObject(self, @selector(webViewProxyDelegate));
     
     if (!retDelegate) {
-        retDelegate = [[YQWebViewProxyDelegate alloc]init];
+        retDelegate = [[YQWebViewProxy alloc]init];
         objc_setAssociatedObject(self, @selector(webViewProxyDelegate), retDelegate, OBJC_ASSOCIATION_RETAIN);
         self.delegate = retDelegate;
     }

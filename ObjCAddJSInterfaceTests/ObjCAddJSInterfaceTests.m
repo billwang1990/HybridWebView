@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "UIWebView+AddJavaScriptInterface.h"
 
 @interface ObjCAddJSInterfaceTests : XCTestCase
+
+@property (nonatomic, strong) UIWebView *web;
 
 @end
 
@@ -18,6 +21,12 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    self.web = [[UIWebView alloc]init];
+    
+    __weak typeof(self) wSelf = self;
+    [self.web addJavascriptInterfaces:wSelf WithName:@"this"];
+    
 }
 
 - (void)tearDown {
@@ -36,5 +45,6 @@
         // Put the code you want to measure the time of here.
     }];
 }
+
 
 @end

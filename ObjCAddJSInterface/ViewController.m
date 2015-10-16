@@ -21,14 +21,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
+
     typeof(self) wSelf = self;
     [self.webView addJavascriptInterfaces:wSelf WithName:@"ViewController"];
-    
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] 																		 pathForResource:@"test" ofType:@"html"]isDirectory:NO]]];
     
-    [self.navigationItem setNavigationBarItemWithTitle:@"add" andTarget:self action:@selector(tap) isLeftItem:NO];
-    
+    [self.navigationItem setNavigationBarItemWithTitle:@"+" andTarget:self action:@selector(createNewVC) isLeftItem:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,52 +34,38 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)tap
+- (void)createNewVC
 {
     [self.navigationController pushViewController:[ViewController new] animated:YES];
 }
 
-- (void)testMethod:(id)param
-{
-    if ([param isKindOfClass:[NSArray class]]) {
-        [param enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSLog(@"%@ is instance of %@ \n", obj, [obj class]);
-        }];
-    }
-    
-    if ([param isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *dic = param;
-        [dic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            NSLog(@"%@ is instance of %@ \n", obj, [obj class]);
-
-        }];
-    }
-    
-    NSLog(@"call testMethod from js  %@", [param description]);
+- (void)passArrayFromJS:(NSArray*)arr{
+    NSLog(@"%s: %@",__FUNCTION__, [arr description]);
 }
 
-- (void)testBool:(BOOL)val
-{
-    if (val) {
-        NSLog(@"bool val");
-    }
+- (void)passObjFromJS:(NSDictionary*)o{
+    NSLog(@"%s: %@",__FUNCTION__, [o description]);
 }
 
-- (NSString*)testFloat:(CGFloat)f
-{
-    NSLog(@"%f",f);
-    
-    __block NSString *ret = nil;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        sleep(5);
-        NSLog(@"fire");
-        ret = @"012343356";
-    });
-    
-    while (!ret) {
-    }
-    
-    return ret;
+- (void)passStringFromJS:(NSString*)str{
+    NSLog(@"%s: %@",__FUNCTION__, str);
+}
+
+- (NSArray*)callArray{
+    return @[@1,@2,@"3"];
+}
+
+- (NSDictionary*)callObject{
+    return @{@"name":@"nativeObj", @"type":@"object"};
+}
+
+- (NSString*)callString{
+    return @"string value";
+}
+
+- (NSString*)asyncCall{
+    sleep(5);
+    return @"bill wang";
 }
 
 @end

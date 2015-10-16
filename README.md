@@ -1,30 +1,39 @@
-# ObjCAddJSInterface
-Inject native object to javascript
+# HybridWebView
 
-最近在开发过程中，看安卓同事可以调用一个叫addJavaScriptInterface的API很方便的把Native的对象注册到js中，从而可以在js中调用Native的代码。然而，OC中本身是不支持这样的特性的。因此我做了一层封装，在UIWebView上增加了一个category，从而可以像安卓一样很方便的将Native的代码注入js。
+Native object inject to javascript environment.
+You can call native method from UIWebView, and send the result back. It also support async callback handler.
 
-例：
+###Usage：
 
+First of all, you should import `UIWebView+AddJavaScriptInterface.h`
 
-Native
+Injection:
+	   
+	[self.webView addJavascriptInterfaces:wSelf WithName:@"ViewController"];
 
+	
+Native code:
 
 	@interface ViewController : UIViewController
 
-	- (void)testMethod:(id)param;
+	- (void)passArrayFromJS:(NSArray*)arr;
+	- (NSArray*)callArray;
 
 	@end
 
-JS调用
+Javascript call:
 
+	ViewController.passArrayFromJS([1, 2, "2"]);
+	ViewController.callArray();
 
-	ViewController.testMehtod(param);
 	
-这里js一旦调用了之后，Native会执行对应的方法，并返回返回值（如果有的话）。如果你希望通过闭包的方式（比如Native是一个耗时的操作）获得返回值，可以像下面这样写，在最后传入一个闭包：
+Async :
 
-	ViewController.testMethod(param, function (ret){ 
-	//do something 
-	});
+You can add a callback at last if you will get the result later.	
+
+	ViewController.callArray( function(ret){console.log(ret)} );
+
 	
-现在的代码有一定的局限性，不过对于我个人目前的项目来说足够了，会在后续进行改进
-	
+###Problem
+Only support pass string, array or dictionary.
+

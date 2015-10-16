@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface YQWebViewProxyDelegate : NSObject<UIWebViewDelegate>
+@interface YQWebViewProxy : NSObject<UIWebViewDelegate>
 
 @property (nonatomic, strong) NSMapTable *registInterface;
 
 - (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
-- (void) setDelegate:(id<UIWebViewDelegate>)delegate;
+- (void) setDelegate: (id<UIWebViewDelegate>)delegate;
 
 @end

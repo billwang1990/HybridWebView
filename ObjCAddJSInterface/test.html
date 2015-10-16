@@ -1,15 +1,22 @@
 <html>
-	<head>
-		<script type="text/javascript">
-            ViewController.testFloat(1, function(ret){});
+    <head>
+        <script type="text/javascript">
+            
+            ViewController.passArrayFromJS(["22","2","3"]);
+            ViewController.passObjFromJS({"name":"obj1","type":"object"});
+            ViewController.passStringFromJS("string value");
+<!--            ViewController.callString();-->
+<!--            ViewController.callArray();-->
+<!--            ViewController.callObject();-->
+
         </script>
-	</head>
-	
-	<body>
+    </head>
+    
+    <body>
         <br>
-
-        <h1>少年带朵花</h1>
-
+        
+        <h1>Hybrid  Bridge!</h1>
+        <p>Support string, array, dictionary and callback</p>
     </body>
-	
+    
 </html>
