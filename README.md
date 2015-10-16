@@ -1,7 +1,7 @@
 # HybridWebView
 
 Native object inject to javascript environment.
-You can call native method from UIWebView, and send the result back. It also support async callback handler.
+You can call native method from UIWebView, and send the result back to web page. It also support async callback handler.
 
 ###Usage：
 
@@ -33,7 +33,11 @@ You can add a callback at last if you will get the result later.
 
 	ViewController.callArray( function(ret){console.log(ret)} );
 
-	
+###Safari web inspector:
+
+![screenshot](./screenshot.png)
 ###Problem
-Only support pass string, array or dictionary.
+Only support pass string, array or dictionary now.
+
+
 
