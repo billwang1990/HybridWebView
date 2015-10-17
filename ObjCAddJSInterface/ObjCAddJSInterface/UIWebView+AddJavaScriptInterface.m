@@ -45,7 +45,7 @@
     [self YQHybridSetDelegate:del];
 }
 
-- (void)addJavascriptInterfaces:(id)interface WithName:(NSString *)name
+- (void)addJavascriptInterfaces:(id)interface withName:(NSString *)name
 {
     [[self webViewProxyDelegate] addJavascriptInterfaces:interface WithName:name];
 }

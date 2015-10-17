@@ -23,7 +23,7 @@
     // Do any additional setup after loading the view, typically from a nib.
 
     typeof(self) wSelf = self;
-    [self.webView addJavascriptInterfaces:wSelf WithName:@"ViewController"];
+    [self.webView addJavascriptInterfaces:wSelf withName:@"ViewController"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] 																		 pathForResource:@"test" ofType:@"html"]isDirectory:NO]]];
     
     [self.navigationItem setNavigationBarItemWithTitle:@"+" andTarget:self action:@selector(createNewVC) isLeftItem:NO];

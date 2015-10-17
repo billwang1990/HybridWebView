@@ -10,6 +10,6 @@
 
 @interface UIWebView (AddJavaScriptInterface)
 
-- (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
+- (void) addJavascriptInterfaces:(NSObject*) interface withName:(NSString*) name;
 
 @end
