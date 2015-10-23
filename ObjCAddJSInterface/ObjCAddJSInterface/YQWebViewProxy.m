@@ -89,6 +89,8 @@
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    NSLog(@"call %s", __FUNCTION__);
+
     if ([_realDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [_realDelegate webView:webView didFailLoadWithError:error];
     }
@@ -96,6 +98,8 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+    NSLog(@"call %s", __FUNCTION__);
+
     if ([_realDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [_realDelegate webViewDidStartLoad:webView];
     };
@@ -103,6 +107,8 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    NSLog(@"call %s", __FUNCTION__);
+    
     [self injectObjectForWebView:webView];
 
     NSURL *url = [request URL];
@@ -282,7 +288,6 @@ NSArray* DumpObjMethods(Class clz){
 
     return [param copy]?:nil;
 }
-
 
 #pragma mark send result back to js
 - (void)sendResultFrom:(UIWebView*)web value:(NSString*)val asJSString:(BOOL)asStr callBack:(NSString*)callback{

@@ -42,7 +42,7 @@
         [proxyDelegate setDelegate:del];
     }
     
-    [self YQHybridSetDelegate:del];
+    [self YQHybridSetDelegate:proxyDelegate];
 }
 
 - (void)addJavascriptInterfaces:(id)interface withName:(NSString *)name
