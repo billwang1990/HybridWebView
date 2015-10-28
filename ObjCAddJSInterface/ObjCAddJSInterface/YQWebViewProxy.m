@@ -359,7 +359,14 @@ NSArray* DumpObjMethods(Class clz){
                 sendResult(ret, YES);
             }
         }else if (!strcmp(returnType, @encode(float))){
-            [NSNumber numberWithFloat:*((float*)buffer)];
+            sendResult([[NSNumber numberWithFloat:*((float*)buffer)]stringValue], NO);
+        }
+        else if (!strcmp(returnType, @encode(double))){
+            sendResult([[NSNumber numberWithDouble:*((double*)buffer)]stringValue], NO);
+        }else if (!strcmp(returnType, @encode(int))){
+            sendResult([[NSNumber numberWithInt:*((int*)buffer)]stringValue],NO);
+        }else if (!strcmp(returnType, @encode(long))){
+            sendResult([[NSNumber numberWithLong:*((long*)buffer)]stringValue],NO);
         }
     }
 }
