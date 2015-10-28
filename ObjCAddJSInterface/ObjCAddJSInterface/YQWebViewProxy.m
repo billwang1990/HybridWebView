@@ -323,7 +323,13 @@ NSArray* DumpObjMethods(Class clz){
             printf("malloc failed!");
             return;
         }
-        [invocation getReturnValue:&buffer];
+
+        if(!strcmp(returnType, @encode(id))) {
+            [invocation getReturnValue:&buffer];
+        } else {
+            [invocation getReturnValue:buffer];
+        }
+
         NSString *ret = nil;
         
         __weak typeof(self) wSelf = self;
@@ -352,8 +358,8 @@ NSArray* DumpObjMethods(Class clz){
                 }
                 sendResult(ret, YES);
             }
-        }else{
-            //unsupported type
+        }else if (!strcmp(returnType, @encode(float))){
+            ;
         }
     }
 }
