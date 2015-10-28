@@ -68,4 +68,8 @@
     return @"bill wang";
 }
 
+- (float)getFloat {
+    return 1.1;
+}
+
 @end
