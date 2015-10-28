@@ -359,7 +359,7 @@ NSArray* DumpObjMethods(Class clz){
                 sendResult(ret, YES);
             }
         }else if (!strcmp(returnType, @encode(float))){
-            ;
+            [NSNumber numberWithFloat:*((float*)buffer)];
         }
     }
 }
